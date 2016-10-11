@@ -1,10 +1,15 @@
+import codecs
+import os
+import sys
 from setuptools import setup
 
-def readme():
-    with open('README.md') as file:
-        return file.read()
+def read(fname):
+    return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-VERSION = "0.0.1"
+def readme():
+    return read("README.md")
+
+VERSION = "0.0.2"
 
 setup(name='apilimiter',
     version=VERSION,
