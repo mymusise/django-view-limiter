@@ -4,6 +4,8 @@ from functools import wraps
 
 
 def get_value(instance, key):
+    if not key:
+        return key
     keys = key.split('.')
     value = instance
     for k in keys:
@@ -11,7 +13,7 @@ def get_value(instance, key):
     return value
 
 
-def limiter(limit_key='#no_any_key', limit_time=0, limit_redirect=''):
+def limiter(limit_key='', limit_time=0, limit_redirect=''):
     """
     limit_key: is a key for user which will find in <request>
     limit_time: max time before limit it
