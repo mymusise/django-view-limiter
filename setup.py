@@ -1,7 +1,10 @@
 import codecs
 import os
 import sys
-from setuptools import setup
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup
 
 def read(fname):
     return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
