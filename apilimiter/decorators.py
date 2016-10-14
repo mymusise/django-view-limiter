@@ -22,7 +22,8 @@ def limiter(limit_key='#no_any_key', limit_time=0, limit_redirect=''):
         def warpper(request, *args, **kwargs):
             if limit_time > 0:
                 function_name = func.__module__ + '.' + func.__name__
-                value = "%s-%s" % (function_name, get_value(request, limit_key))
+                value = "%s-%s" % (function_name,
+                                   get_value(request, limit_key))
                 limiter = DailyLimits.objects.filter(key=value).first()
                 if not limiter:
                     DailyLimits.objects.create(
@@ -32,7 +33,7 @@ def limiter(limit_key='#no_any_key', limit_time=0, limit_redirect=''):
                 else:
                     if limiter.times >= limit_time:
                         if limit_redirect:
-                            if hasattr(limit_redirect,'__call__'):
+                            if hasattr(limit_redirect, '__call__'):
                                 return limit_redirect(request, *args, **kwargs)
                             return HttpResponseRedirect(limit_redirect)
                         return HttpResponseForbidden()

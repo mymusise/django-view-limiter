@@ -13,4 +13,3 @@ class HistoryLimits(models.Model):
     key = models.CharField(max_length=128)
     times = models.IntegerField()
     date = models.DateField()
-

@@ -2,19 +2,22 @@ import codecs
 import os
 import sys
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except:
-    from distutils.core import setup
+    from distutils.core import setup, find_packages
+
 
 def read(fname):
     return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 def readme():
-    return read("README.md")
+    return read("./README.txt")
 
-VERSION = "0.0.2"
+VERSION = "0.0.5"
 
-setup(name='apilimiter',
+setup(
+    name='apilimiter',
     version=VERSION,
     description='View limiter for django',
     long_description=readme().strip(),
@@ -22,7 +25,7 @@ setup(name='apilimiter',
     author_email='mymusise1@gmail.com',
     url='https://github.com/mymusise/django-view-limiter',
     license='MIT',
-    packages=['apilimiter'],
+    packages=find_packages(),
     install_requires=[],
     keywords='apilimiter api limiter django view',
     classifiers=[
@@ -32,10 +35,13 @@ setup(name='apilimiter',
         'License :: OSI Approved :: MIT License',
         'Framework :: Django',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3',        
-        'Programming Language :: Python :: 2.7',        
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Software Development'
     ],
     include_package_data=True,
+    package_data={
+        '': ['.README.md']
+    },
     zip_safe=False,
 )
