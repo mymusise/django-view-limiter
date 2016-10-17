@@ -1,15 +1,19 @@
 from .models import *
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from functools import wraps
+from functools import reduce
 
 
-def get_value(instance, key):
+def get_key_value(k, key):
+    return key.get(k) if type(key) == dict else getattr(key, k)
+
+
+def get_instance_value(instance, key):
     if not key:
         return key
     keys = key.split('.')
     value = instance
-    for k in keys:
-        value = getattr(value, k)
+    value = reduce(lambda v, k: get_key_value(k, v), keys, value)
     return value
 
 
@@ -25,7 +29,7 @@ def limiter(limit_key='', limit_time=0, limit_redirect=''):
             if limit_time > 0:
                 function_name = func.__module__ + '.' + func.__name__
                 value = "%s-%s" % (function_name,
-                                   get_value(request, limit_key))
+                                   get_instance_value(request, limit_key))
                 limiter = DailyLimits.objects.filter(key=value).first()
                 if not limiter:
                     DailyLimits.objects.create(

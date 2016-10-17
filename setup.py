@@ -14,7 +14,7 @@ def read(fname):
 def readme():
     return read("./README.txt")
 
-VERSION = "1.0.0"
+VERSION = "1.0.3"
 
 setup(
     name='apilimiter',
