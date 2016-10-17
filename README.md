@@ -5,20 +5,36 @@ Django-View-Limiter is a django app, which limit the time of every user to visit
 Also you can limit the page view of apis directly.
 
 
+Install Requires
+===
+- django >=1.9
+
+
 Install
 ===
 
 Django-View-Limiter is best installed via PyPI. To install the latest version, run:
 
 	pip install apilimiter
+
 or Install from github source:
 
 	pip install git+git://github.com/mymusise/django-view-limiter
 
 
-Install Requires
+Starting
 ===
-- django >=1.9
+
+adding apilimiter in you **your_project/settings.py**
+
+    INSTALLED_APPS = (
+            '...',
+            'apilimiter',
+        )
+
+then run migrate
+
+    python manage.py migrate apilimiter
 
 
 Examples
