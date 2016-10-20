@@ -1,7 +1,8 @@
-from .models import *
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from functools import wraps
 from functools import reduce
+from .models import *
+import time
 
 
 def get_key_value(k, key):
@@ -17,34 +18,38 @@ def get_instance_value(instance, key):
     return value
 
 
-def limiter(limit_key='', limit_time=0, limit_redirect=''):
+def limiter(key='', times=0, redirect='', rate=(24 * 60 * 60)):
     """
-    limit_key: is a key for user which will find in <request>
-    limit_time: max time before limit it
-    limit_redirect: the redirect url of redirect view function
+    @key: is a key for user which will find in <request>
+    @time: max time before limit it
+    @redirect: the redirect url of redirect view function
     """
     def func_warpper(func):
         @wraps(func)
         def warpper(request, *args, **kwargs):
-            if limit_time > 0:
-                function_name = func.__module__ + '.' + func.__name__
-                value = "%s-%s" % (function_name,
-                                   get_instance_value(request, limit_key))
-                limiter = DailyLimits.objects.filter(key=value).first()
-                if not limiter:
-                    DailyLimits.objects.create(
-                        key=value,
-                        times=0,
-                    )
-                else:
-                    if limiter.times >= limit_time:
-                        if limit_redirect:
-                            if hasattr(limit_redirect, '__call__'):
-                                return limit_redirect(request, *args, **kwargs)
-                            return HttpResponseRedirect(limit_redirect)
-                        return HttpResponseForbidden()
-                    limiter.times += 1
-                    limiter.save()
+            function_name = func.__module__ + '.' + func.__name__
+            value = "%s-%s" % (function_name,
+                               get_instance_value(request, key))
+            limiter = DailyLimits.objects.filter(key=value).first()
+            if not limiter:
+                DailyLimits.objects.create(
+                    key=value,
+                    times=1,
+                    time_left=time.time() + rate,
+                )
+            else:
+                now = time.time()
+                if limiter.time_left <= now:
+                    limiter.time_left = now + rate
+                    limiter.times = 0
+                if limiter.times >= times > 0 and now < limiter.time_left:
+                    if redirect:
+                        if hasattr(redirect, '__call__'):
+                            return redirect(request, *args, **kwargs)
+                        return HttpResponseRedirect(redirect)
+                    return HttpResponseForbidden()
+                limiter.times += 1
+                limiter.save()
             return func(request, *args, **kwargs)
         return warpper
     return func_warpper
