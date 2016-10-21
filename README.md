@@ -74,7 +74,7 @@ If you want to limit the IP address in request(*request.META['REMOTE_ADDR']*), w
     from django.shortcuts import HttpResponse
     from apilimiter.decorators import limiter
 
-    @limiter(key='META['REMOTE_ADDR']',times=5, redirect='/myapp/wrong')
+    @limiter(key="META['REMOTE_ADDR']",times=5, redirect='/myapp/wrong')
     def index(request):
         return HttpResponse("decorators test")
 
