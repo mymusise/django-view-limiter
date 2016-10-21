@@ -1,8 +1,8 @@
 Django-View-Limiter
 ===
 
-Django-View-Limiter is a django app, which limit the time of every user to visit apis mainly.
-Also you can limit the page view of apis directly.
+Django-View-Limiter is a django app, which limit django view by IP,UA or user.
+Also you can limit view directly.
 
 
 Install Requires
